@@ -1,10 +1,25 @@
-var game = new Phaser.Game(800, 400, Phaser.AUTO, 'test', null, true, false);
+// generate random number
+function rndNum(num) {
+
+    return Math.round(Math.random() * num);
+
+}
+
+var width = window.innerWidth;
+var height = window.innerHeight / 2;
+
+var game = new Phaser.Game(width, height, Phaser.AUTO, 'test', null, true, false);
 
 var BasicGame = function (game) { };
 
 BasicGame.Boot = function (game) { };
 
-var isoGroup, cursorPos, cursor;
+var isoGroup, cursorPos, cursor, selectedTile, changedGroup;
+
+function addPhaserDude (tile) {
+    game.add.sprite(game.world.randomX, game.world.randomY, 'cube');
+    game.add.isoSprite(tile.isoX-38,tile.isoY+22, 90, 'tree1');
+};
 
 BasicGame.Boot.prototype =
 {
@@ -12,6 +27,8 @@ BasicGame.Boot.prototype =
         game.load.image('tile', 'normaltile.png');
 
         game.load.image('tree1', 'images/tree_test.png');
+
+        game.load.image('cube', 'images/cube.png');
 
         game.time.advancedTiming = true;
 
@@ -21,8 +38,6 @@ BasicGame.Boot.prototype =
         // This is used to set a game canvas-based offset for the 0, 0, 0 isometric coordinate - by default
         // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
         game.iso.anchor.setTo(0.5, 0.2);
-
-
     },
     create: function () {
 
@@ -34,6 +49,9 @@ BasicGame.Boot.prototype =
 
         // Provide a 3D position for the cursor
         cursorPos = new Phaser.Plugin.Isometric.Point3();
+
+        key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+
     },
     update: function () {
         // Update the cursor position.
@@ -45,27 +63,59 @@ BasicGame.Boot.prototype =
         isoGroup.forEach(function (tile) {
             var inBounds = tile.isoBounds.containsXY(cursorPos.x, cursorPos.y);
             // If it does, do a little animation and tint change.
+            if (game.input.activePointer.isDown && inBounds && !tile.busy){
+                console.log("CLICKED!")
+                tree1 = game.add.isoSprite(tile.isoX-38,tile.isoY+22, 90, 'tree1');
+                tile.busy = true;
+                tile.tint = 0x86bfda;
+            }
+            else if (tile.selected && inBounds && tile.busy) {
+                console.log("PAINTING RED");
+                tile.tint = 0xff0000;
+            }
             if (!tile.selected && inBounds) {
+                selectedTile = tile
                 tile.selected = true;
+                console.log("PAINTING BLUE");
                 tile.tint = 0x86bfda;
                 game.add.tween(tile).to({ isoZ: 4 }, 200, Phaser.Easing.Quadratic.InOut, true);
             }
+
             // If not, revert back to how it was.
             else if (tile.selected && !inBounds) {
-                if (game.input.activePointer.isDown){
-                    console.log("CLICKED!")
-                    game.add.isoSprite(tile.isoX-38,tile.isoY+22, 90, 'tree1');
-                }
+                // debugger
+                key1.onDown.add(addPhaserDude, tile);
+
                 // debugger;
                 console.log(tile.isoX);
                 console.log(tile.isoY);
                 console.log(tile.isoZ);
-                console.log("TREE added");
+                console.log("TILE SELECTED added");
                 tile.selected = false;
                 tile.tint = 0xffffff;
                 game.add.tween(tile).to({ isoZ: 0 }, 200, Phaser.Easing.Quadratic.InOut, true);
             }
+
+
+            changedGroup = isoGroup.filter(function(element){ return element.busy })
         });
+
+            // EXTRA TESTINGGGGGGGG -------------------------------
+            function actionOnClick () {
+                game.add.isoSprite(selectedTile.isoX-38,selectedTile.isoY+22, 90, 'tree1');
+                console.log("ESPECIALLLL");
+            }
+
+
+            // create CUBE button sprites on the screen
+            cube = game.add.sprite(20, 20, 'cube');
+            cube.fixedToCamera = true;
+            cube.inputEnabled = true;
+            cube.alpha = 0.8
+            cube.events.onInputDown.add(actionOnClick, this);
+
+            // -------------------------------
+
     },
     render: function () {
         game.debug.text("Move your mouse around!", 2, 36, "#ffffff");
@@ -73,8 +123,8 @@ BasicGame.Boot.prototype =
     },
     spawnTiles: function () {
         var tile;
-        for (var xx = 0; xx < 256; xx += 38) {
-            for (var yy = 0; yy < 256; yy += 38) {
+        for (var xx = 0; xx < 384; xx += 38) {
+            for (var yy = 0; yy < 384; yy += 38) {
                 // Create a tile using the new game.add.isoSprite factory method at the specified position.
                 // The last parameter is the group you want to add it to (just like game.add.sprite)
                 tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
@@ -88,15 +138,7 @@ game.state.add('Boot', BasicGame.Boot);
 game.state.start('Boot');
 
 
-
-
-
-
 // // -----------------------------------------------
-
-
-
-
 
 
 
