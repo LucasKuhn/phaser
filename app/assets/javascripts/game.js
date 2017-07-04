@@ -4,7 +4,7 @@ function rndNum(num) {
     return Math.round(Math.random() * num);
 
 }
-var apt;
+var apt, sprite;
 
 // When the Sprite on top is clicked
 function actionOnClick () {
@@ -13,11 +13,37 @@ function actionOnClick () {
     isoGroup.forEach(function (tile) {tile.tint = 0xffffff;})
 }
 
-function addBurger () {
-    game.add.isoSprite(selectedTile.isoX,selectedTile.isoY+60, 65, 'burgerSW');
+
+function addLvl1 () {
+    apt = game.add.isoSprite(selectedTile.isoX-10,selectedTile.isoY+55, 70, 'lvl1',);
     selectedTile.busy = true;
     isoGroup.forEach(function (tile) {tile.tint = 0xffffff;})
+}
 
+function addBurger () {
+
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:3000/games-data",
+        data: {
+            info: {
+            name: "Burger",
+            renderOrderID: selectedTile.renderOrderID,
+            z: selectedTile.z,
+            isoX: selectedTile.isoX,
+            isoY: selectedTile.isoY
+            }
+        },
+      }).always(function(e) {
+      console.log( "complete:", e );
+      // debugger
+      });
+
+    // Original Burger Adder
+    sprite = game.add.isoSprite(selectedTile.isoX,selectedTile.isoY+60, 65, 'burgerSW');
+    selectedTile.busy = true;
+    isoGroup.forEach(function (tile) {tile.tint = 0xffffff;})
+    debugger
 }
 
 var width = window.innerWidth;
@@ -34,7 +60,9 @@ var isoGroup, cursorPos, cursor, selectedTile, changedGroup;
 BasicGame.Boot.prototype =
 {
     preload: function () {
-        game.load.image('tile', 'isocube.png');
+        game.load.image('tile', 'base/PNG/landscapeTiles_067.png');
+
+        game.load.image('lvl1', 'lvl1.png');
 
         game.load.image('tree1', 'images/tree_test.png');
 
@@ -60,19 +88,26 @@ BasicGame.Boot.prototype =
         // Adding Background
         game.add.tileSprite(0, 0, 1920, 1080, 'background');
 
-        // create the burger clickable image
+        // create the burger button clickable image
         clickableSprite = game.add.sprite(200, 100, 'burgerSW');
         clickableSprite.fixedToCamera = true;
         clickableSprite.inputEnabled = true;
         clickableSprite.alpha = 0.8
         clickableSprite.events.onInputDown.add(addBurger, this);
 
-        // create the apartment clickable image
+        // create the apartment button clickable image
         clickableSprite = game.add.sprite(20, 20, 'apt');
         clickableSprite.fixedToCamera = true;
         clickableSprite.inputEnabled = true;
         clickableSprite.alpha = 0.8
         clickableSprite.events.onInputDown.add(actionOnClick, this);
+
+        // create the lvl1 button clickable image
+        clickableSprite = game.add.sprite(400, 20, 'lvl1');
+        clickableSprite.fixedToCamera = true;
+        clickableSprite.inputEnabled = true;
+        clickableSprite.alpha = 0.8
+        clickableSprite.events.onInputDown.add(addLvl1, this);
 
         // Create a group for our tiles.
         isoGroup = game.add.group();
