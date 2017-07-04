@@ -11,4 +11,4 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 Rails.application.config.assets.precompile += %w( phaser.js )
-Rails.application.config.assets.precompile += %w( phaser-plugin-isometric.js )
+Rails.application.config.assets.precompile += %w( game.js )
