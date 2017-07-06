@@ -34,19 +34,33 @@ function create() {
 }
 
 function findTree() {
-    var tree = game.add.sprite(game.world.centerX, game.world.centerY, 'tree');
+    var tree = game.add.sprite(game.world.centerX, game.world.centerY+50, 'tree');
     tree.alpha = 0;
-    game.add.tween(tree).to( { alpha: 1 }, 1000, Phaser.Easing.Linear.None, true);
+    game.add.tween(tree).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
     tree.anchor.setTo(0.3, 0.4);
     tree.height = game.world.height/3;
     tree.width = game.world.width/5;
 }
 
 function popup() {
-    popup = game.add.sprite(game.world.centerX+80, 200, 'popup');
+    popup = game.add.sprite(game.world.centerX+50, game.world.centerY-200, 'popup');
     popup.anchor.set(0.5);
+    popup.alpha = 0.8
     popup.scale.set(0.1);
-    game.add.tween(popup.scale).to( { x: 2, y: 1 }, 1500, Phaser.Easing.Elastic.Out, true);
+    game.add.tween(popup.scale).to( { x: 3, y: 1.8 }, 1500, Phaser.Easing.Elastic.Out, true);
+    // debugger
+
+    // TEXT
+    var ipsum = "You Found Wood!\n What is 1+1";
+    var style = { font: "30px Arial", fill: "#fff", wordWrap: true, wordWrapWidth: 650 };
+    text = game.add.text(0, 0, ipsum, style);
+    text.setTextBounds(popup.x, popup.y);
+    // Center align
+    text.anchor.set(0.5);
+    text.align = 'center';
+    //  Stroke color and thickness
+    text.stroke = '#000000';
+    text.strokeThickness = 4;
 }
 
 
