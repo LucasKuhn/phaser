@@ -14,4 +14,9 @@ class GamesController < ApplicationController
     "string!"
   end
 
+
+  def mine
+
+  end
+
 end

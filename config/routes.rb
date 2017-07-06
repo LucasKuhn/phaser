@@ -3,4 +3,6 @@ Rails.application.routes.draw do
   root to: "games#index"
   post "/games-data", to: "games#create"
   get "/games-data", to: "games#preload"
+
+  get "/mine", to: "games#mine"
 end
