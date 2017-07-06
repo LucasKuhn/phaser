@@ -72926,7 +72926,20 @@ Phaser.Loader.prototype = {
     *
     * The key must be a unique String. It is used to add the file to the Phaser.Cache upon successful load.
     *
-    * The URL of the packfile can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+    * The URL of the packfile can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be
+
+
+
+
+
+
+
+
+
+
+
+
+    ed to it.
     *
     * @method Phaser.Loader#pack
     * @param {string} key - Unique asset key of this resource pack.

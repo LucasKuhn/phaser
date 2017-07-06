@@ -1,8 +1,9 @@
-var width = window.innerWidth;
-var height = window.innerHeight;
+// var width = window.innerWidth;
+// var height = window.innerHeight;
 
-
-game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, 'gameArea',{
+console.log($("#gameArea").height())
+console.log()
+game = new Phaser.Game($("#gameArea").width(), $("#gameArea").height(), Phaser.CANVAS, 'gameArea',{
     preload: preload,
     create: create,
     update: update,
@@ -11,26 +12,40 @@ game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, 'ga
 
 function preload() {
     game.load.crossOrigin = true;
-    game.load.image('backdrop', 'cave.png');
     game.load.image('tree', 'tree.png');
     game.load.image('popup', 'graybutton.png');
+    game.load.image('backdrop', 'cave.png');
     game.load.image('forest', 'forest.png');
+    game.load.image('temple', 'temple.jpg');
 
-    game.load.spritesheet('stumpy', 'stumpy.png', 200, 215, 12);
+
+    game.load.spritesheet('stumpy', 'stumpy.png', 200, 220, 12);
     game.load.spritesheet('golem', 'golem.png', 145, 140, 12);
+    // game.load.spritesheet('boss', 'boss-stomp.png', 190, 172, 5);
+    game.load.spritesheet('boss', 'boss-stomp.png', 192, 172, 6);
+    game.load.spritesheet('boss2', 'boss-shoot.png', 192, 172, 6);
 
 
 }
 
 function create() {
 
-    // FOREST
-    background = game.add.sprite(0, 0, 'forest');
+    // TEMPLE
+    background = game.add.sprite(0, 0, 'temple');
     background.height = game.world.height;
     background.width = game.world.width;
 
-    game.time.events.add(Phaser.Timer.SECOND * 2, findStumpy, this);
-    game.time.events.add(Phaser.Timer.SECOND * 2.5, popup, this);
+    game.time.events.add(Phaser.Timer.SECOND * 2, findBoss, this);
+    // game.time.events.add(Phaser.Timer.SECOND * 2.5, popup, this);
+
+
+    // FOREST
+    // background = game.add.sprite(0, 0, 'forest');
+    // background.height = game.world.height;
+    // background.width = game.world.width;
+
+    // game.time.events.add(Phaser.Timer.SECOND * 2, findStumpy, this);
+    // game.time.events.add(Phaser.Timer.SECOND * 2.5, popup, this);
 
 
 
@@ -47,6 +62,14 @@ function create() {
     // game.time.events.add(Phaser.Timer.SECOND * 2.5, popup, this);
 }
 
+function findBoss() {
+    var golem = game.add.sprite(game.world.centerX+50, game.world.centerY+100, 'boss');
+    var walk = golem.animations.add('walk');
+    golem.animations.play('walk', 3, true);
+    golem.alpha = 0;
+    game.add.tween(golem).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
+}
+
 function findStumpy() {
     var stumpy = game.add.sprite(game.world.centerX, game.world.centerY+50, 'stumpy');
 
@@ -55,9 +78,10 @@ function findStumpy() {
     stumpy.alpha = 0;
     game.add.tween(stumpy).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
     stumpy.anchor.setTo(0.3, 0.4);
-    stumpy.height = game.world.height/3;
-    stumpy.width = game.world.width/5;
+    stumpy.height = 200;
+    stumpy.width = 220;
 }
+
 
 function findGolem() {
     var stumpy = game.add.sprite(game.world.centerX, game.world.centerY+50, 'golem');
@@ -109,9 +133,17 @@ function update() {
     // if (game.input.keyboard.isDown(Phaser.Keyboard.Q)) {}
 
     // MAKE THE IMAGE ZOOM IN
+    // if (worldScale < 1.25){
+    //     worldScale += 0.002;
+    //     game.world.pivot.x += 1.3
+    //     game.world.pivot.y += 1
+    //     game.world.scale.set(worldScale);
+    // };
+
+    // ZOOM FOR TEMPLE
     if (worldScale < 1.25){
         worldScale += 0.002;
-        game.world.pivot.x += 1.3
+        game.world.pivot.x += 2
         game.world.pivot.y += 1
         game.world.scale.set(worldScale);
     };
