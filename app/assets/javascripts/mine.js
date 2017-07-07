@@ -63,10 +63,11 @@ function create() {
 }
 
 function findBoss() {
-    var golem = game.add.sprite(game.world.centerX+50, game.world.centerY+100, 'boss');
+    var golem = game.add.sprite(game.world.centerX-40, game.world.centerY-30, 'boss');
     var walk = golem.animations.add('walk');
-    golem.animations.play('walk', 3, true);
+    golem.animations.play('walk', 4, true);
     golem.alpha = 0;
+    golem.scale.set(2);
     game.add.tween(golem).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true);
 }
 
@@ -143,7 +144,7 @@ function update() {
     // ZOOM FOR TEMPLE
     if (worldScale < 1.25){
         worldScale += 0.002;
-        game.world.pivot.x += 2
+        game.world.pivot.x += 1.5
         game.world.pivot.y += 1
         game.world.scale.set(worldScale);
     };

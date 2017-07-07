@@ -20,7 +20,8 @@ BasicGame.Boot.prototype =
     preload: function () {
 
         // --- LOAD IMAGE ASSETS
-        game.load.image('tile', 'base/PNG/landscapeTiles_067.png');
+        // game.load.image('tile', 'base/PNG/landscapeTiles_067.png');
+        game.load.image('tile', 'brick.png');
         game.load.image('lvl1', 'lvl1.png');
         game.load.image('tree1', 'images/tree_test.png');
         game.load.image('cube', 'images/cube.png');
@@ -31,6 +32,7 @@ BasicGame.Boot.prototype =
 
 
         game.load.image('background', "background.jpg")
+
 
 
         // Used to show the FPS
