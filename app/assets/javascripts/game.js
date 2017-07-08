@@ -35,7 +35,7 @@ BasicGame.Boot.prototype =
         game.load.image('accept-button', "accept-button.png")
 
 
-        game.load.image('center', "fountain.png")
+        game.load.image('center', "center-fountain.png")
 
         game.load.image('orb-house', "orb-house-1.png")
 
