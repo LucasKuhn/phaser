@@ -21,17 +21,29 @@ BasicGame.Boot.prototype =
 
         // --- LOAD IMAGE ASSETS
         // game.load.image('tile', 'base/PNG/landscapeTiles_067.png');
-        game.load.image('tile', 'brick.png');
+        game.load.image('tile', 'newgrass5.png');
         game.load.image('lvl1', 'lvl1.png');
         game.load.image('tree1', 'images/tree_test.png');
+        game.load.image('main-building', 'main-building-full.png');
         game.load.image('cube', 'images/cube.png');
         game.load.image('apt', 'city-builder/aptcomplex_SE.png');
         game.load.image('burgerSW', 'city-builder/burger_SW.png');
+
         game.load.image('red-button', "redbutton.png")
-        game.load.image('right-button', "right.png")
+        game.load.image('right-button', "right-button.png")
+        game.load.image('left-button', "left-button.png")
+        game.load.image('accept-button', "accept-button.png")
+
+
+        game.load.image('center', "fountain.png")
+
+        game.load.image('orb-house', "orb-house-1.png")
 
 
         game.load.image('background', "background.jpg")
+
+        game.load.image('color-image', "color-image-2.jpg")
+
 
 
 
@@ -44,40 +56,54 @@ BasicGame.Boot.prototype =
         // This is used to set a game canvas-based offset for the 0, 0, 0 isometric coordinate - by default
         // this point would be at screen coordinates 0, 0 (top left) which is usually undesirable.
         game.iso.anchor.setTo(0.5, 0.2);
+
     },
     create: function () {
 
-        // Adding Background
-        game.add.tileSprite(0, 0, width, height, 'background');
+        // ---- BACKGROUND AND BUILDINGS ----
+
+        // Adds Background Image (Single Color Image)
+        game.add.tileSprite(0, 0, width, height, 'color-image');
+
+        // Adds Background Image for Main Building
+        game.add.isoSprite(-10,-200,80,'main-building');
 
 
-        // TESTING BUTTONS
 
-        // RED BUTTON
-        cE = game.add.sprite(400, 0, 'red-button');
-        cE.fixedToCamera = true;
-        cE.inputEnabled = true;
-        cE.events.onInputDown.add(addBuilding, this);
 
         // RIGHT BUTTON
-        cE = game.add.sprite(210, 60, 'right-button');
-        cE.fixedToCamera = true;
-        cE.inputEnabled = true;
-        cE.events.onInputDown.add(onDown, this);
+        rButton = game.add.sprite(260, game.world.height - 220, 'right-button');
+        rButton.fixedToCamera = true;
+        rButton.inputEnabled = true;
+        rButton.events.onInputDown.add(onDown, this);
+
+        // LEFT BUTTON
+        lButton = game.add.sprite(30, game.world.height - 217, 'left-button');
+        lButton.fixedToCamera = true;
+        lButton.inputEnabled = true;
+        rButton.events.onInputDown.add(onDown, this);
+
+        // ACCEPT BUTTON
+        aButton = game.add.sprite(game.world.width - 250,game.world.height - 250, 'accept-button');
+        aButton.scale.set(1.5);
+        aButton.inputEnabled = true;
+        aButton.events.onInputDown.add(addBuilding, this);
+
+        // BUILDING PREVIEW
+        buildingButton = game.add.sprite(20, game.world.height - 260, 'center');
+        buildingButton.alpha = 0.8
+
+        // unused params:
         // cE.events.onInputOver.add(onDown, this);
         // cE.events.onInputUp.add(onUp, this);
         // cE.events.onInputOut.add(onUp, this);
+        // cE.fixedToCamera = true;
 
-        // --------------- CLICKABLE BUILDING BUTTONS
-
-        // APARTMENT
-        buildingButton = game.add.sprite(20, 20, 'apt');
-        buildingButton.fixedToCamera = true;
-        buildingButton.alpha = 0.8
-
+        // ---- BACKGROUND AND BUILDINGS ----
 
         // Create a group for our tiles.
         isoGroup = game.add.group();
+
         // Create a group for our buildings.
         buildingGroup = game.add.group();
 
@@ -146,8 +172,8 @@ BasicGame.Boot.prototype =
     // ADD THE MAP TILES
     spawnTiles: function () {
         var tile;
-        for (var xx = 0; xx < 512; xx += 76) {
-            for (var yy = 0; yy < 512; yy += 76) {
+        for (var xx = 0; xx < 450; xx += 95) {
+            for (var yy = 0; yy < 450; yy += 95) {
                 // Create a tile using the new game.add.isoSprite factory method at the specified position.
                 // The last parameter is the group you want to add it to (just like game.add.sprite)
                 tile = game.add.isoSprite(xx, yy, 0, 'tile', 0, isoGroup);
@@ -170,11 +196,35 @@ function addApt () {
 }
 
 
+// function addMainBuilding () {
+//     game.add.isoSprite(-10,-200,80,'main-building',-1);
+// }
+
 function addLvl1 () {
     selectedTile.buildingName = 'lvl1'
     selectedTile.buildingX = -10
     selectedTile.buildingY = 55
     selectedTile.buildingZ = 70
+    selectedTile.busy = true;
+
+    renderProperly();
+}
+
+function addOrbHouse1 () {
+    selectedTile.buildingName = 'orb-house'
+    selectedTile.buildingX = -10
+    selectedTile.buildingY = 55
+    selectedTile.buildingZ = 70
+    selectedTile.busy = true;
+
+    renderProperly();
+}
+
+function addCenter () {
+    selectedTile.buildingName = 'center'
+    selectedTile.buildingX = -10
+    selectedTile.buildingY = 65
+    selectedTile.buildingZ = 65
     selectedTile.busy = true;
 
     renderProperly();
@@ -255,7 +305,7 @@ function onDown(sprite, pointer) {
 function addBuilding(sprite, pointer) {
     switch (buildingButton.key) {
       case 'apt':
-        addApt();
+        addCenter();
         break;
       case 'lvl1':
         addLvl1();
